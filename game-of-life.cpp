@@ -12,12 +12,12 @@ const int HEIGHT = 800;
 const int CELL_SIZE = 10;
 const int GRID_WIDTH = WIDTH / CELL_SIZE;
 const int GRID_HEIGHT = HEIGHT / CELL_SIZE;
-const int FPS = 2;
+const int FPS = 5;
 
 class Grid {
 private:
   vector<vector<bool>> cells;
-  int height, width;
+  int width, height;
 
 public:
   // constructor
@@ -27,11 +27,13 @@ public:
     cells.resize(height, vector<bool>(width, false));
   }
 
-  void create();
+  sf::RenderWindow create();
 
   void grid_from_file(const string filename);
   int get_neighbors(int x, int y) const;
   void update();
+
+  void print_state() const;
 
   // setters
   void set(int x, int y, bool state);
@@ -48,7 +50,7 @@ int Grid::get_neighbors(int x, int y) const {
     for (int j = -1; j <= 1; ++j) {
       if ((0 == j) && (0 == i)) {
         continue;
-      } else if (get(x + i, y + j)) {
+      } else if (get(y + i, x + j)) {
         n += 1;
       }
     }
@@ -56,7 +58,46 @@ int Grid::get_neighbors(int x, int y) const {
   return n;
 }
 
-bool Grid::get(int x, int y) const { return cells[x][y]; }
+bool Grid::get(int x, int y) const {
+  if (x < 0 || x >= width || y < 0 || y >= height)
+    return false;
+  return cells[y][x];
+}
+
+void Grid::print_state() const {
+  for (int i = 0; i < cells.size(); i++) {
+    for (int j = 0; j < cells[i].size(); j++) {
+      cout << cells[i][j] << " ";
+    }
+    cout << endl;
+  }
+}
+
+void Grid::update() {
+  vector<vector<bool>> newcells = cells;
+  int n;
+  for (int i = 0; i < height; ++i) {
+    for (int j = 0; j < width; ++j) {
+      n = get_neighbors(j, i);
+
+      // if alive
+      if (cells[i][j]) {
+        // overpopulation or //underpopulation
+        if ((n > 3) || (n < 2)) {
+          newcells[i][j] = false;
+        }
+        // lives
+      }
+      // if dead
+      else {
+        // reproducton
+        if (n == 3)
+          newcells[i][j] = true;
+      }
+    }
+  }
+  cells = newcells;
+}
 
 void Grid::grid_from_file(const string filename) {
   ifstream file(filename);
@@ -82,16 +123,18 @@ void Grid::grid_from_file(const string filename) {
   file.close();
 }
 
-void Grid::set(int x, int y, bool state) { cells[x][y] = state; }
+void Grid::set(int x, int y, bool state) {
+  if (x >= 0 && x < width && y >= 0 && y < height)
+    cells[y][x] = state;
+}
 
-void Grid::create() {
-  sf::RenderWindow window(
-      sf::VideoMode(GRID_WIDTH * CELL_SIZE, GRID_HEIGHT * CELL_SIZE),
-      "Conway's Game of Life");
+sf::RenderWindow Grid::create() {
+  sf::RenderWindow window(sf::VideoMode(sf::Vector2u(GRID_WIDTH * CELL_SIZE,
+                                                     GRID_HEIGHT * CELL_SIZE)),
+                          "Conway's Game of Life");
   window.setFramerateLimit(10);
 
-  sf::RectangleShape cellShape(sf::Vector2f(CELL_SIZE, CELL_SIZE));
-  cellShape.setFillColor(sf::Color::Green);
+  return window;
 }
 
 int main(int argc, char *argv[]) {
@@ -102,7 +145,37 @@ int main(int argc, char *argv[]) {
 
   string filename = argv[1];
 
-  Grid grid(HEIGHT, WIDTH);
+  Grid grid(GRID_WIDTH, GRID_HEIGHT);
+
+  grid.grid_from_file(filename);
+  grid.print_state();
+
+  sf::RenderWindow window = grid.create();
+
+  sf::RectangleShape cellShape(sf::Vector2f(CELL_SIZE, CELL_SIZE));
+  cellShape.setFillColor(sf::Color::Green);
+
+  while (window.isOpen()) {
+    while (auto event = window.pollEvent()) {
+      if (event->is<sf::Event::Closed>())
+        window.close();
+    }
+
+    grid.update();
+
+    window.clear(sf::Color::Black);
+
+    for (int y = 0; y < GRID_HEIGHT; ++y) {
+      for (int x = 0; x < GRID_WIDTH; ++x) {
+        if (grid.get(x, y)) {
+          cellShape.setPosition({float(x * CELL_SIZE), float(y * CELL_SIZE)});
+          window.draw(cellShape);
+        }
+      }
+    }
+
+    window.display();
+  }
 
   return 0;
 }
