@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/ndw/Documents/Projects/game-of-life/build/cmake_install.cmake"
+	],
+	"Parallel" : false
+}
