@@ -14,14 +14,25 @@ void Renderer::poll() {
 
   const auto onClose = [&win](const sf::Event::Closed &) { win.close(); };
 
-  // const auto onKeyPressed = [this](const sf::Event::KeyPressed&
-  // keyPressed)
-  // {
-  //     if (keyPressed.scancode == sf::Keyboard::Scancode::Escape)
-  //         window.close();
-  // };
-  //
-  window.handleEvents(onClose /*, onKeyPressed*/);
+  const auto onClick =
+      [this](const sf::Event::MouseButtonPressed &mouseButtonPressed) {
+        int x = mouseButtonPressed.position.x / Globals::CELL_SIZE;
+        int y = mouseButtonPressed.position.y / Globals::CELL_SIZE;
+        if (mouseButtonPressed.button == sf::Mouse::Button::Left) {
+          grid.set(x, y, true);
+        } else if (mouseButtonPressed.button == sf::Mouse::Button::Right) {
+          grid.set(x, y, false);
+        }
+      };
+
+  const auto onKeyPressed = [this](const sf::Event::KeyPressed &keyPressed) {
+    if (keyPressed.scancode == sf::Keyboard::Scancode::Escape)
+      window.close();
+    if (keyPressed.scancode == sf::Keyboard::Scancode::Space)
+      pause = !pause;
+  };
+
+  window.handleEvents(onClose, onClick, onKeyPressed);
 
   // if (event.type == sf::Event::MouseButtonPressed) {
   //     if (event.mouseButton.button == sf::Mouse::Left) {
@@ -73,7 +84,8 @@ void Renderer::draw_cells() {
 void Renderer::display() {
   poll();
 
-  grid.update();
+  if (!pause)
+    grid.update();
   // iteration += 1;
   // alive = grid.get_alive();
 

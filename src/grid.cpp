@@ -76,6 +76,10 @@ void Grid::set(int x, int y, bool state) {
     cells[y][x] = state;
 }
 
+void Grid::toggle(int x, int y) {
+	cells[y][x] = !(cells[y][x]);
+}
+
 // getters
 bool Grid::get(int x, int y) const {
   if (x < 0 || x >= w || y < 0 || y >= h)

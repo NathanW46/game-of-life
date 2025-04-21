@@ -9,6 +9,7 @@ private:
   Grid &grid;
 
 public:
+  bool pause;
   Renderer(Grid &grid);
   sf::RenderWindow window;
   void draw_cells();

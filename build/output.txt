@@ -1,0 +1,23 @@
+[ 20%] Building CXX object CMakeFiles/game.dir/src/renderer.cpp.o
+/home/ndw/Documents/Projects/game-of-life/src/renderer.cpp: In lambda function:
+/home/ndw/Documents/Projects/game-of-life/src/renderer.cpp:19:31: error: base operand of ‘->’ has non-pointer type ‘const sf::Event::MouseButtonPressed’
+   19 |         if (mouseButtonPressed->button == sf::Mouse::Button::Left) {
+      |                               ^~
+/home/ndw/Documents/Projects/game-of-life/src/renderer.cpp:21:37: error: base operand of ‘->’ has non-pointer type ‘const sf::Event::MouseButtonPressed’
+   21 |           int x = mouseButtonPressed->position.x / Globals::CELL_SIZE;
+      |                                     ^~
+/home/ndw/Documents/Projects/game-of-life/src/renderer.cpp:22:37: error: base operand of ‘->’ has non-pointer type ‘const sf::Event::MouseButtonPressed’
+   22 |           int y = mouseButtonPressed->position.y / Globals::CELL_SIZE;
+      |                                     ^~
+/home/ndw/Documents/Projects/game-of-life/src/renderer.cpp:26:38: error: base operand of ‘->’ has non-pointer type ‘const sf::Event::MouseButtonPressed’
+   26 |         } else if (mouseButtonPressed->button == sf::Mouse::Button::Right) {
+      |                                      ^~
+/home/ndw/Documents/Projects/game-of-life/src/renderer.cpp:28:37: error: base operand of ‘->’ has non-pointer type ‘const sf::Event::MouseButtonPressed’
+   28 |           int x = mouseButtonPressed->position.x / Globals::CELL_SIZE;
+      |                                     ^~
+/home/ndw/Documents/Projects/game-of-life/src/renderer.cpp:29:37: error: base operand of ‘->’ has non-pointer type ‘const sf::Event::MouseButtonPressed’
+   29 |           int y = mouseButtonPressed->position.y / Globals::CELL_SIZE;
+      |                                     ^~
+make[2]: *** [CMakeFiles/game.dir/build.make:107: CMakeFiles/game.dir/src/renderer.cpp.o] Error 1
+make[1]: *** [CMakeFiles/Makefile2:87: CMakeFiles/game.dir/all] Error 2
+make: *** [Makefile:91: all] Error 2

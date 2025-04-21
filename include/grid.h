@@ -23,6 +23,7 @@ public:
 
   // setters
   void set(int x, int y, bool state);
+  void toggle(int x, int y);
 
   // getters
   bool get(int x, int y) const;
