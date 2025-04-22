@@ -96,6 +96,21 @@
 				"backtrace" : 2,
 				"fragment" : "/usr/lib/libsfml-system.so",
 				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "-Wall",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "-Wextra",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "-O7",
+				"role" : "libraries"
 			}
 		],
 		"language" : "CXX"

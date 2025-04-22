@@ -11,9 +11,11 @@ using namespace std;
 class Grid {
 private:
   vector<vector<bool>> cells;
-  int w, h, alive;
+  int w, h;
 
 public:
+  int alive = 0;
+  int iteration = 0;
   // constructor
   Grid(int w, int h);
 

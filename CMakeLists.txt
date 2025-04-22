@@ -18,8 +18,10 @@ include_directories(include)
 add_executable(game ${SOURCE_FILES})
 
 target_link_libraries(game PRIVATE
+	
     /usr/lib/libsfml-graphics.so
     /usr/lib/libsfml-window.so
     /usr/lib/libsfml-system.so
+	-Wall -Wextra -O7
 )
 

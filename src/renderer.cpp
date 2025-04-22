@@ -4,7 +4,7 @@ Renderer::Renderer(Grid &grid)
     : grid(grid),
       window(sf::VideoMode(sf::Vector2u(Globals::WIDTH, Globals::HEIGHT)),
              "Conway's Game of Life") {
-  window.setFramerateLimit(10);
+  window.setFramerateLimit(Globals::FPS);
 }
 
 void Renderer::poll() {
@@ -14,54 +14,55 @@ void Renderer::poll() {
 
   const auto onClose = [&win](const sf::Event::Closed &) { win.close(); };
 
-  const auto onClick =
-      [this](const sf::Event::MouseButtonPressed &mouseButtonPressed) {
-        int x = mouseButtonPressed.position.x / Globals::CELL_SIZE;
-        int y = mouseButtonPressed.position.y / Globals::CELL_SIZE;
-        if (mouseButtonPressed.button == sf::Mouse::Button::Left) {
-          grid.set(x, y, true);
-        } else if (mouseButtonPressed.button == sf::Mouse::Button::Right) {
-          grid.set(x, y, false);
-        }
-      };
-
   const auto onKeyPressed = [this](const sf::Event::KeyPressed &keyPressed) {
     if (keyPressed.scancode == sf::Keyboard::Scancode::Escape)
       window.close();
-    if (keyPressed.scancode == sf::Keyboard::Scancode::Space)
+    if (keyPressed.scancode == sf::Keyboard::Scancode::P)
       pause = !pause;
+    if (keyPressed.scancode == sf::Keyboard::Scancode::Space)
+      if (pause)
+        grid.update();
+
+    if (keyPressed.scancode == sf::Keyboard::Scancode::Right) {
+      Globals::FPS += 1;
+      window.setFramerateLimit(Globals::FPS);
+    }
+
+    if (keyPressed.scancode == sf::Keyboard::Scancode::Left) {
+      Globals::FPS -= 1;
+      window.setFramerateLimit(Globals::FPS);
+    }
   };
 
-  window.handleEvents(onClose, onClick, onKeyPressed);
+  window.handleEvents(onClose, onKeyPressed);
 
-  // if (event.type == sf::Event::MouseButtonPressed) {
-  //     if (event.mouseButton.button == sf::Mouse::Left) {
-  //         int x = event.mouseButton.x / Globals::CELL_SIZE;
-  //         int y = event.mouseButton.y / Globals::CELL_SIZE;
-  //         grid.toggle(x, y);
-  //     }
-  // }
+  if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+    int x = sf::Mouse::getPosition(window).x / Globals::CELL_SIZE;
+    int y = sf::Mouse::getPosition(window).y / Globals::CELL_SIZE;
+    grid.set(x, y, true);
+  }
 
-  // sf::RectangleShape txt_bckg(sf::Vector2f(200, 50));
-  // txt_bckg.setPosition(sf::Vector2f(window.getSize().x - 220, 10));
-  // txt_bckg.setFillColor(sf::Color(170, 170, 170, 40));
-  //
-  // sf::Font font;
-  // if (!font.openFromFile("assets/HackNerdFontMono-Regular.ttf")) {
-  //   cerr << "Font not found";
-  //   return -1;
-  // }
-  //
-  // sf::Text text(font, "Iteration: 1", 25);
-  // text.setFillColor(sf::Color::White);
-  // text.setPosition(sf::Vector2f(window.getSize().x - 190, 20));
-  // int iteration = 1;
-  //
-  // int alive = grid.get_alive();
-  // window.draw(txt_bckg);
-  // window.draw(text);
-  //
-  // window.display();
+  else if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Right)) {
+    int x = sf::Mouse::getPosition(window).x / Globals::CELL_SIZE;
+    int y = sf::Mouse::getPosition(window).y / Globals::CELL_SIZE;
+    grid.set(x, y, false);
+  }
+}
+
+void Renderer::draw_text() {
+  sf::RectangleShape txt_bckg(sf::Vector2f(200, 100));
+  txt_bckg.setPosition(sf::Vector2f(window.getSize().x - 220, 10));
+  txt_bckg.setFillColor(sf::Color(170, 170, 170, 40));
+
+  sf::Text text(Globals::font, "Iteration: 1", 15);
+  text.setFillColor(sf::Color::White);
+  text.setPosition(sf::Vector2f(window.getSize().x - 190, 20));
+  text.setString("Iteration: " + to_string(grid.iteration) + "\nAlive: " +
+                 to_string(grid.alive) + "\nFPS: " + to_string(game_fps));
+  text.setPosition(sf::Vector2f(window.getSize().x - 175, 20));
+
+  window.draw(txt_bckg);
+  window.draw(text);
 }
 
 void Renderer::draw_cells() {
@@ -81,27 +82,25 @@ void Renderer::draw_cells() {
   }
 }
 
-void Renderer::display() {
+int Renderer::calc_fps() {
+  game_fps = 1 / dt;
+  return game_fps;
+}
+
+void Renderer::render() {
+  // grid.print_state();
+  dt = 0.0;
   poll();
 
   if (!pause)
     grid.update();
-  // iteration += 1;
-  // alive = grid.get_alive();
 
   window.clear(sf::Color::Black);
 
   draw_cells();
+  draw_text();
 
   window.display();
-
-  // text.setString("Iteration: " + to_string(iteration) +
-  //                "\nAlive: " + to_string(alive));
-  // text.setPosition(sf::Vector2f(window.getSize().x - 50, 20));
-  //
-  // // display text
-  // window.draw(text);
-  //
-  // window.draw(txt_bckg);
-  // window.display();
+  dt = clock.restart().asSeconds();
+  calc_fps();
 }

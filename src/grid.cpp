@@ -67,6 +67,7 @@ void Grid::update() {
       }
     }
   }
+  iteration += 1;
   cells = newcells;
 }
 
@@ -76,9 +77,7 @@ void Grid::set(int x, int y, bool state) {
     cells[y][x] = state;
 }
 
-void Grid::toggle(int x, int y) {
-	cells[y][x] = !(cells[y][x]);
-}
+void Grid::toggle(int x, int y) { cells[y][x] = !(cells[y][x]); }
 
 // getters
 bool Grid::get(int x, int y) const {

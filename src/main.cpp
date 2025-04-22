@@ -12,18 +12,21 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
+  if (!Globals::font.openFromFile("../assets/HackNerdFontMono-Regular.ttf")) {
+    cerr << "Font not found";
+    return -1;
+  }
+
   string filename = argv[1];
 
-  Grid grid(Globals::WIDTH/Globals::CELL_SIZE, Globals::HEIGHT/Globals::CELL_SIZE);
+  Grid grid(Globals::WIDTH / Globals::CELL_SIZE,
+            Globals::HEIGHT / Globals::CELL_SIZE);
   grid.grid_from_file(filename);
 
   Renderer renderer(grid);
 
-
   while (renderer.window.isOpen()) {
-
-    renderer.display();
-
+    renderer.render();
   }
 
   return 0;

@@ -2,7 +2,6 @@ CMakeFiles/game.dir/src/main.cpp.o: \
  /home/ndw/Documents/Projects/game-of-life/src/main.cpp \
  /usr/include/stdc-predef.h \
  /home/ndw/Documents/Projects/game-of-life/include/globals.h \
- /home/ndw/Documents/Projects/game-of-life/include/grid.h \
  /usr/include/SFML/Graphics.hpp /usr/include/SFML/Graphics/BlendMode.hpp \
  /usr/include/SFML/Graphics/Export.hpp /usr/include/SFML/Config.hpp \
  /usr/include/SFML/Graphics/CircleShape.hpp \
@@ -285,7 +284,9 @@ CMakeFiles/game.dir/src/main.cpp.o: \
  /usr/include/SFML/System/FileInputStream.hpp \
  /usr/include/SFML/System/InputStream.hpp \
  /usr/include/SFML/System/MemoryInputStream.hpp \
- /usr/include/SFML/System/Sleep.hpp /usr/include/c++/14.2.1/fstream \
+ /usr/include/SFML/System/Sleep.hpp \
+ /home/ndw/Documents/Projects/game-of-life/include/grid.h \
+ /usr/include/c++/14.2.1/fstream \
  /usr/include/c++/14.2.1/x86_64-pc-linux-gnu/bits/basic_file.h \
  /usr/include/c++/14.2.1/x86_64-pc-linux-gnu/bits/c++io.h \
  /usr/include/c++/14.2.1/bits/fstream.tcc \
